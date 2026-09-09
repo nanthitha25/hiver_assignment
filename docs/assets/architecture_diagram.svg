@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="blueCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="accentBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="accentGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="accentRose" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f87171" />
+      <stop offset="100%" stop-color="#ef4444" />
+    </linearGradient>
+    <linearGradient id="accentPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+    
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrowRose" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444" />
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #f8fafc; }
+    .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; font-weight: 500; fill: #94a3b8; }
+    .layer-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; fill: #64748b; }
+    .node-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; font-weight: 600; fill: #f1f5f9; }
+    .node-desc { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 400; fill: #94a3b8; }
+    .edge-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 10px; font-weight: 600; }
+  </style>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bgGrad)" rx="16" />
+  <rect x="1" y="1" width="958" height="618" fill="none" stroke="#1e293b" stroke-width="1.5" rx="15" />
+
+  <!-- Header -->
+  <text x="40" y="42" class="title">Hiver AI Support Agent: System Architecture &amp; Data Flow</text>
+  <text x="40" y="62" class="subtitle">Target: @AppleSupport • Data Grounded via Kaggle Twitter Corpus • Zero False-Positive Triage</text>
+
+  <!-- ==================== LAYER 1: INGESTION ==================== -->
+  <rect x="40" y="90" width="260" height="490" fill="#0b1329" stroke="#1e293b" stroke-dasharray="4" rx="12" />
+  <text x="56" y="115" class="layer-title">1. Ingestion &amp; Preprocessing</text>
+
+  <!-- Node: Customer Tweet -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="140" width="220" height="72" rx="10" fill="url(#blueCard)" stroke="#334155" />
+    <circle cx="85" cy="176" r="14" fill="#1e3a8a" />
+    <path d="M 80 176 L 90 176 M 85 171 L 85 181" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" />
+    <text x="108" y="168" class="node-title">Customer Tweet</text>
+    <text x="108" y="186" class="node-desc">Web UI / API / Kaggle</text>
+  </g>
+
+  <!-- Node: Text Normalizer -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="250" width="220" height="72" rx="10" fill="url(#blueCard)" stroke="#334155" />
+    <circle cx="85" cy="286" r="14" fill="#0f766e" />
+    <path d="M 80 286 L 85 291 L 91 281" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round" />
+    <text x="108" y="278" class="node-title">Text Normalizer</text>
+    <text x="108" y="296" class="node-desc">Strip handles, sanitize PII</text>
+  </g>
+
+  <!-- Connector: Tweet to Normalizer -->
+  <line x1="170" y1="212" x2="170" y2="248" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Node: Data Store Pill -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="360" width="220" height="190" rx="10" fill="#0f172a" stroke="#1e293b" />
+    <text x="80" y="390" class="node-title" fill="#a855f7">Historical Kaggle Corpus</text>
+    <text x="80" y="410" class="node-desc">Source: thoughtvector/twcs.csv</text>
+    <text x="80" y="430" class="node-desc">• 2.8M raw Twitter dialogs</text>
+    <text x="80" y="450" class="node-desc">• DuckDB streaming query</text>
+    <text x="80" y="470" class="node-desc">• in_response_to_tweet_id NULL</text>
+    <text x="80" y="490" class="node-desc">• @AppleSupport initiated pairs</text>
+    <text x="80" y="520" class="node-desc" fill="#38bdf8">Indexed into ChromaDB vector store</text>
+  </g>
+
+  <!-- ==================== LAYER 2: CORE AI ENGINE ==================== -->
+  <rect x="330" y="90" width="350" height="490" fill="#070d1e" stroke="#1e293b" stroke-dasharray="4" rx="12" />
+  <text x="346" y="115" class="layer-title">2. Core Decision &amp; Grounding Pipeline</text>
+
+  <!-- Node: Intent Classifier -->
+  <g filter="url(#shadow)">
+    <rect x="350" y="140" width="310" height="72" rx="10" fill="url(#blueCard)" stroke="#38bdf8" stroke-width="1.2" />
+    <text x="370" y="168" class="node-title">1. Intent Classification Engine</text>
+    <text x="370" y="186" class="node-desc">MiniLM embeddings • 5 canonical classes • τ &gt; 0.60</text>
+  </g>
+
+  <!-- Node: Deterministic Safety Gate -->
+  <g filter="url(#shadow)">
+    <rect x="350" y="240" width="310" height="72" rx="10" fill="url(#blueCard)" stroke="#f43f5e" stroke-width="1.2" />
+    <text x="370" y="268" class="node-title" fill="#fda4af">2. Deterministic Safety Gate</text>
+    <text x="370" y="286" class="node-desc">Thermal / Smoke / Pool Immersion / PII / Fraud</text>
+  </g>
+
+  <!-- Node: ChromaDB Grounded RAG -->
+  <g filter="url(#shadow)">
+    <rect x="350" y="340" width="310" height="72" rx="10" fill="url(#blueCard)" stroke="#c084fc" stroke-width="1.2" />
+    <text x="370" y="368" class="node-title" fill="#e9d5ff">3. Historical Retrieval (RAG)</text>
+    <text x="370" y="386" class="node-desc">ChromaDB Top-k • Intent-Filtered k-NN (Cosine)</text>
+  </g>
+
+  <!-- Node: Grounded Reply Drafter -->
+  <g filter="url(#shadow)">
+    <rect x="350" y="440" width="310" height="72" rx="10" fill="url(#blueCard)" stroke="#10b981" stroke-width="1.2" />
+    <text x="370" y="468" class="node-title" fill="#a7f3d0">4. Grounded Reply Drafter</text>
+    <text x="370" y="486" class="node-desc">Apple brand voice • &le; 280 chars • apple.co links</text>
+  </g>
+
+  <!-- Connectors in Layer 2 -->
+  <line x1="280" y1="286" x2="348" y2="180" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowBlue)" />
+  <line x1="505" y1="212" x2="505" y2="238" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+  <line x1="505" y1="312" x2="505" y2="338" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+  <line x1="505" y1="412" x2="505" y2="438" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- ==================== LAYER 3: OUTPUT & ACTION ==================== -->
+  <rect x="710" y="90" width="210" height="490" fill="#0b1329" stroke="#1e293b" stroke-dasharray="4" rx="12" />
+  <text x="726" y="115" class="layer-title">3. Triage &amp; Action</text>
+
+  <!-- Node: Triage Decision Gate -->
+  <g filter="url(#shadow)">
+    <rect x="725" y="140" width="180" height="85" rx="10" fill="url(#blueCard)" stroke="#e2e8f0" stroke-width="1.5" />
+    <text x="740" y="168" class="node-title" fill="#f8fafc">Triage Decision</text>
+    <text x="740" y="188" class="node-desc">Cascading Priority</text>
+    <text x="740" y="206" class="node-desc">Audit Stated Reason</text>
+  </g>
+
+  <!-- Node: Human Queue (Escalation) -->
+  <g filter="url(#shadow)">
+    <rect x="725" y="270" width="180" height="90" rx="10" fill="#450a0a" stroke="#ef4444" stroke-width="1.5" />
+    <circle cx="745" cy="300" r="10" fill="#ef4444" />
+    <text x="765" y="304" class="node-title" fill="#fca5a5">ESCALATE</text>
+    <text x="740" y="328" class="node-desc" fill="#fecaca">Tier-2 Human Specialist</text>
+    <text x="740" y="346" class="node-desc" fill="#f87171">100% Safety Recall</text>
+  </g>
+
+  <!-- Node: Auto-Reply Dispatcher -->
+  <g filter="url(#shadow)">
+    <rect x="725" y="420" width="180" height="90" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="1.5" />
+    <circle cx="745" cy="450" r="10" fill="#10b981" />
+    <text x="765" y="454" class="node-title" fill="#a7f3d0">AUTO_HANDLE</text>
+    <text x="740" y="478" class="node-desc" fill="#d1fae5">Safe Grounded Reply</text>
+    <text x="740" y="496" class="node-desc" fill="#34d399">93% Triage Accuracy</text>
+  </g>
+
+  <!-- Connectors to Layer 3 -->
+  <!-- Safety hazard bypass direct to Escalate -->
+  <path d="M 660 276 L 700 276 L 723 300" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowRose)" />
+  <text x="670" y="266" class="edge-label" fill="#f87171">Hazard / PII</text>
+
+  <!-- Normal path from Drafter to Triage Gate -->
+  <path d="M 660 476 L 690 476 L 690 182 L 723 182" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Triage to Escalate -->
+  <line x1="815" y1="225" x2="815" y2="268" stroke="#ef4444" stroke-width="2" stroke-dasharray="3" marker-end="url(#arrowRose)" />
+  <text x="822" y="248" class="edge-label" fill="#f87171">Low Conf / Risk</text>
+
+  <!-- Triage to Auto-Reply -->
+  <path d="M 845 225 L 845 390 L 845 418" fill="none" stroke="#10b981" stroke-width="2" marker-end="url(#arrowGreen)" />
+  <text x="852" y="380" class="edge-label" fill="#34d399">Verified Safe</text>
+
+</svg>

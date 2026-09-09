@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="pCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <marker id="pArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="pArrowRed" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444" />
+    </marker>
+    <marker id="pArrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+    </marker>
+  </defs>
+
+  <style>
+    .p-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; font-weight: 700; fill: #f8fafc; }
+    .p-desc { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 400; fill: #94a3b8; }
+    .p-step { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; fill: #38bdf8; letter-spacing: 0.5px; }
+  </style>
+
+  <rect width="100%" height="100%" fill="url(#pBg)" rx="12" stroke="#1e293b" />
+
+  <!-- Step 1: Customer Tweet -->
+  <g transform="translate(30, 80)">
+    <rect width="150" height="130" rx="10" fill="url(#pCard)" stroke="#334155" stroke-width="1.2" />
+    <text x="15" y="30" class="p-step">Input</text>
+    <text x="15" y="55" class="p-title">Customer Tweet</text>
+    <text x="15" y="80" class="p-desc">@AppleSupport</text>
+    <text x="15" y="100" class="p-desc">Raw Tweet Text</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <line x1="180" y1="145" x2="218" y2="145" stroke="#38bdf8" stroke-width="2" marker-end="url(#pArrow)" />
+
+  <!-- Step 2: Intent Engine -->
+  <g transform="translate(220, 80)">
+    <rect width="160" height="130" rx="10" fill="url(#pCard)" stroke="#38bdf8" stroke-width="1.2" />
+    <text x="15" y="30" class="p-step">Step 1</text>
+    <text x="15" y="55" class="p-title">Intent Engine</text>
+    <text x="15" y="80" class="p-desc">MiniLM Embeddings</text>
+    <text x="15" y="100" class="p-desc">5-Class Taxonomy</text>
+    <text x="15" y="118" class="p-desc" fill="#38bdf8">Confidence Score</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <line x1="380" y1="145" x2="418" y2="145" stroke="#38bdf8" stroke-width="2" marker-end="url(#pArrow)" />
+
+  <!-- Step 3: Triage Gate -->
+  <g transform="translate(420, 80)">
+    <rect width="160" height="130" rx="10" fill="url(#pCard)" stroke="#f59e0b" stroke-width="1.2" />
+    <text x="15" y="30" class="p-step" fill="#f59e0b">Step 2</text>
+    <text x="15" y="55" class="p-title">Safety Triage Gate</text>
+    <text x="15" y="80" class="p-desc">Thermal &amp; Hazard Regex</text>
+    <text x="15" y="100" class="p-desc">PII &amp; Fraud Detection</text>
+    <text x="15" y="118" class="p-desc" fill="#f59e0b">Cascading Priority</text>
+  </g>
+
+  <!-- Diverging Arrows from Triage -->
+  <!-- Branch A: Escalate (Up right) -->
+  <path d="M 580 120 L 630 80 L 678 80" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#pArrowRed)" />
+  <text x="590" y="95" font-family="-apple-system, sans-serif" font-size="10px" font-weight="700" fill="#f87171">Hazard / PII / Frustration</text>
+
+  <!-- Branch B: Grounded RAG to Auto-Handle (Down right) -->
+  <path d="M 580 170 L 630 210 L 678 210" fill="none" stroke="#10b981" stroke-width="2" marker-end="url(#pArrowGreen)" />
+  <text x="590" y="215" font-family="-apple-system, sans-serif" font-size="10px" font-weight="700" fill="#34d399">Verified Safe Query</text>
+
+  <!-- Terminal 1: Escalate to Human -->
+  <g transform="translate(680, 40)">
+    <rect width="210" height="80" rx="10" fill="#450a0a" stroke="#ef4444" stroke-width="1.5" />
+    <text x="15" y="28" class="p-title" fill="#fca5a5">ESCALATE TO HUMAN</text>
+    <text x="15" y="48" class="p-desc" fill="#fecaca">Tier-2 Specialist Queue</text>
+    <text x="15" y="66" class="p-desc" fill="#f87171">With Stated Reason Code</text>
+  </g>
+
+  <!-- Terminal 2: Grounded Auto-Handle -->
+  <g transform="translate(680, 170)">
+    <rect width="210" height="80" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="1.5" />
+    <text x="15" y="28" class="p-title" fill="#a7f3d0">AUTO_HANDLE APPROVED</text>
+    <text x="15" y="48" class="p-desc" fill="#d1fae5">ChromaDB RAG Grounded</text>
+    <text x="15" y="66" class="p-desc" fill="#34d399">Apple Tone &amp; &le; 280 Chars</text>
+  </g>
+</svg>
