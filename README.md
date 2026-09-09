@@ -36,9 +36,7 @@ To make an autonomous agent trustworthy enough to deploy in production, our arch
 2. **Grounded Reply Drafting (RAG)**: Retrieves historical resolution pairs from `@AppleSupport` and drafts replies strictly grounded in verified brand history (under 280 characters, official `apple.co` URLs only).
 3. **Deterministic Safety Triage & Escalation Gate**: Guarantees **zero false-positive auto-handles** on physical hazards, thermal risks, liquid immersion, fraud, PII, and customer aggression.
 
-<p align="center">
-  <img src="docs/assets/pipeline_workflow.svg" alt="Hiver AI Support Pipeline Workflow" width="100%" />
-</p>
+![Hiver AI Support Pipeline Workflow](docs/assets/pipeline_workflow.png)
 
 ---
 
@@ -106,47 +104,20 @@ Evaluated across the exact same **200-sample hand-labelled Golden Set** (contain
 
 ## 🏗️ 4. System Architecture & Data Flow
 
-<p align="center">
-  <img src="docs/assets/architecture_diagram.svg" alt="Hiver AI Support Agent Architecture" width="100%" />
-</p>
-
-<details>
-<summary><b>🔍 View Interactive Mermaid Diagram Source</b></summary>
+![Hiver AI Support Architecture Diagram](docs/assets/architecture_diagram.png)
 
 ```mermaid
 flowchart TD
-    subgraph Input_Layer["1. Ingestion and Preprocessing"]
-        CT["Customer Tweet (Web UI / API / Kaggle)"]
-        Pre["Text Normalizer and PII Sanitizer"]
-    end
-
-    subgraph Core_Engine["2. Core Decision and Grounding Pipeline"]
-        IC["Intent Classifier (SentenceTransformers all-MiniLM-L6-v2)"]
-        Safety["Deterministic Safety Gate (Thermal, Smoke, Liquid, Fraud, PII)"]
-        RAG["ChromaDB Vector Store (Kaggle @AppleSupport Resolutions)"]
-        Drafter["Grounded Reply Drafter (Brand Tone, 280 Chars Max)"]
-        Triage["Cascading Triage Decision Gate (AUTO_HANDLE vs ESCALATE)"]
-    end
-
-    subgraph Output_Layer["3. Action and Audit Layer"]
-        Result["Structured SupportResponse (JSON)"]
-        HumanQueue["Tier-2 Human Specialist Queue"]
-        AutoReply["Safe Auto-Reply Dispatcher"]
-    end
-
-    CT --> Pre
-    Pre --> IC
-    IC --> Safety
-    Safety -->|Hazard / PII / Fraud| Triage
-    Safety -->|Clean Query| RAG
-    RAG --> Drafter
+    CT[Customer Tweet] --> Pre[Text Normalizer & PII Sanitizer]
+    Pre --> IC[Intent Classifier: all-MiniLM-L6-v2]
+    IC --> Safety{Deterministic Safety Gate}
+    Safety -->|Hazard or PII or Fraud| Triage[Triage Decision Engine]
+    Safety -->|Clean Query| RAG[ChromaDB Vector Store]
+    RAG --> Drafter[Grounded Reply Drafter]
     Drafter --> Triage
-    Triage --> Result
-    Result -->|action == ESCALATE| HumanQueue
-    Result -->|action == AUTO_HANDLE| AutoReply
+    Triage -->|action == ESCALATE| HumanQueue[Tier-2 Human Specialist Queue]
+    Triage -->|action == AUTO_HANDLE| AutoReply[Safe Auto-Reply Dispatcher]
 ```
-
-</details>
 
 ---
 
