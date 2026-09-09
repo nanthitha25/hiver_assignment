@@ -36,11 +36,14 @@ To make an autonomous agent trustworthy enough to deploy in production, our arch
 2. **Grounded Reply Drafting (RAG)**: Retrieves historical resolution pairs from `@AppleSupport` and drafts replies strictly grounded in verified brand history (under 280 characters, official `apple.co` URLs only).
 3. **Deterministic Safety Triage & Escalation Gate**: Guarantees **zero false-positive auto-handles** on physical hazards, thermal risks, liquid immersion, fraud, PII, and customer aggression.
 
-<p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/pipeline_workflow.png" target="_blank">
-    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/pipeline_workflow.png" alt="Hiver AI Support Pipeline Workflow" width="100%" />
-  </a>
-</p>
+```mermaid
+flowchart LR
+    A[Customer Tweet] --> B[Intent Classifier]
+    B --> C{Safety Gate}
+    C -->|Hazard or PII or Fraud| D[Tier-2 Human Escalation]
+    C -->|Safe Routine Query| E[RAG Historical Grounding]
+    E --> F[Grounded Auto-Reply]
+```
 
 ---
 
@@ -108,163 +111,100 @@ Evaluated across the exact same **200-sample hand-labelled Golden Set** (contain
 
 ## 🏗️ 4. Architecture, Use Case, Class & Sequence Diagrams
 
-This system is engineered and documented across four complementary structural and behavioural views:
-1. **System Architecture Diagram**: Component topology, data flow, and decoupled micro-engines.
-2. **Use Case Diagram**: System boundaries, primary actors (Customer, Human Agent, Auditor), and operational workflows.
-3. **Class Diagram**: Pydantic v2 strict schemas, domain entities, and orchestrator contracts.
-4. **Sequence Diagram**: Synchronous request lifecycle, safety interception, and grounded auto-reply dispatching.
-
----
-
 ### 4.1 System Architecture Diagram
-
-<p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/architecture_diagram.png" target="_blank">
-    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/architecture_diagram.png" alt="System Architecture Diagram" width="100%" />
-  </a>
-</p>
-
-<details>
-<summary><b>📐 View Mermaid Diagram Specification</b></summary>
 
 ```mermaid
 flowchart TD
-    CT["Customer Tweet (@AppleSupport)"] --> Pre["Text Normalizer and PII Sanitizer"]
-    Pre --> IC["Intent Classifier: all-MiniLM-L6-v2 Centroid"]
-    IC --> Safety{"Deterministic Safety Gate"}
-    Safety -->|"Hazard / PII / Fraud / Low Confidence"| Triage["Triage Decision Engine"]
-    Safety -->|"Clean Routine Query"| RAG["ChromaDB Vector Store (Historical Pairs)"]
-    RAG --> Drafter["Grounded Reply Drafter (Max 280 chars)"]
-    Drafter --> Triage
-    Triage -->|"action == ESCALATE"| HumanQueue["Tier-2 Human Specialist Queue"]
-    Triage -->|"action == AUTO_HANDLE"| AutoReply["Safe Auto-Reply Dispatcher"]
+    A[Customer Tweet] --> B[Text Normalizer and PII Sanitizer]
+    B --> C[Intent Classifier: all-MiniLM-L6-v2]
+    C --> D{Deterministic Safety Gate}
+    D -->|Hazard / PII / Fraud| E[Triage Decision Engine]
+    D -->|Routine Query| F[ChromaDB Vector Store]
+    F --> G[Grounded Reply Drafter]
+    G --> E
+    E -->|Action: ESCALATE| H[Tier-2 Human Agent Queue]
+    E -->|Action: AUTO_HANDLE| I[Safe Auto-Reply Dispatcher]
 ```
-
-</details>
 
 ---
 
 ### 4.2 Use Case Diagram
 
-<p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/usecase_diagram.png" target="_blank">
-    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/usecase_diagram.png" alt="Use Case Diagram" width="100%" />
-  </a>
-</p>
-
-<details>
-<summary><b>📐 View Mermaid Diagram Specification</b></summary>
-
 ```mermaid
 flowchart LR
-    subgraph Primary_Actor["Primary Actor"]
-        Customer(("Customer<br/>(Twitter User)"))
-    end
+    Customer((Customer))
+    Agent((Tier-2 Agent))
+    Auditor((SDE Auditor))
 
-    subgraph System_Boundary["HIVER AI SUPPORT AGENT SYSTEM"]
-        UC1["UC1: Submit Customer Tweet / Support Inquiry"]
-        UC2["UC2: Classify Intent into 5 Data-Derived Classes"]
-        UC3["UC3: Deterministic Triage Gate (Auto-Handle vs Escalate)"]
-        UC4["UC4: Retrieve Historical Resolutions and Draft Reply"]
-        UC5["UC5: Review Escalated Ticket with Explicit Stated Reason"]
-        UC6["UC6: Run 15-Minute Evaluation Harness and LLM Judge"]
-    end
-
-    subgraph Secondary_Actors["Secondary Actors"]
-        HumanAgent(("Tier-2 Agent<br/>(Human Specialist)"))
-        Auditor(("Evaluator / SDE<br/>(Benchmark Auditor)"))
+    subgraph System["Hiver AI Support Agent System"]
+        UC1[UC1: Submit Customer Tweet]
+        UC2[UC2: Classify Support Intent]
+        UC3[UC3: Deterministic Safety and Triage]
+        UC4[UC4: Retrieve Historical Grounding and Draft Reply]
+        UC5[UC5: Review Escalated Ticket with Reason Code]
+        UC6[UC6: Run Evaluation Harness and LLM Judge]
     end
 
     Customer --> UC1
     Customer --> UC2
     Customer --> UC4
-    UC5 --> HumanAgent
+    UC5 --> Agent
     UC6 --> Auditor
 ```
-
-</details>
 
 ---
 
 ### 4.3 Class Diagram
 
-<p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/class_diagram.png" target="_blank">
-    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/class_diagram.png" alt="Class Diagram" width="100%" />
-  </a>
-</p>
-
-<details>
-<summary><b>📐 View Mermaid Diagram Specification</b></summary>
-
 ```mermaid
 classDiagram
     class TweetInput {
-        +str tweet_id
-        +str text
-        +str author_id
-        +Optional~str~ created_at
-        +Optional~str~ in_reply_to_tweet_id
+        +string tweet_id
+        +string text
+        +string author_id
+        +string created_at
     }
 
     class IntentResult {
-        +AppleIntentEnum primary_intent
+        +string primary_intent
         +float confidence
-        +List~IntentEnum~ secondary_intents
-        +Dict~str,float~ score_distribution
+        +list secondary_intents
+        +dict score_distribution
     }
 
     class TriageDecision {
-        +TriageAction action
-        +str stated_reason
-        +Optional~ReasonCode~ reason_code
+        +string action
+        +string stated_reason
+        +string reason_code
         +float risk_score
-        +List~str~ triggered_rules
-    }
-
-    class SupportPipeline {
-        -SemanticCentroidClassifier intent_classifier
-        -HistoricalRetriever retriever
-        -GroundedReplyGenerator reply_generator
-        -TriageEngine triage_engine
-        +process(tweet) SupportResponse
-        +batch_process(tweets) List~SupportResponse~
-        +fail_closed_fallback() SupportResponse
     }
 
     class SupportResponse {
-        +str tweet_id
+        +string tweet_id
         +IntentResult intent
         +TriageDecision triage
-        +Optional~str~ drafted_reply
-        +Optional~RetrievalResult~ grounding_context
+        +string drafted_reply
         +float execution_time_ms
-        +to_dict() dict
-        +to_json(indent) str
+    }
+
+    class SupportPipeline {
+        -classifier
+        -retriever
+        -drafter
+        -triage_engine
+        +process(tweet) SupportResponse
+        +batch_process(tweets) list
     }
 
     SupportPipeline ..> TweetInput : processes
-    SupportPipeline --> IntentResult : computes
-    SupportPipeline --> TriageDecision : evaluates
-    SupportPipeline --> SupportResponse : constructs
-    SupportResponse *-- IntentResult : aggregates
-    SupportResponse *-- TriageDecision : aggregates
+    SupportPipeline --> SupportResponse : returns
+    SupportResponse *-- IntentResult : contains
+    SupportResponse *-- TriageDecision : contains
 ```
-
-</details>
 
 ---
 
 ### 4.4 Sequence Diagram
-
-<p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/sequence_diagram.png" target="_blank">
-    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/sequence_diagram.png" alt="Sequence Diagram" width="100%" />
-  </a>
-</p>
-
-<details>
-<summary><b>📐 View Mermaid Diagram Specification</b></summary>
 
 ```mermaid
 sequenceDiagram
@@ -273,28 +213,26 @@ sequenceDiagram
     participant Pipeline as SupportPipeline
     participant Classifier as IntentClassifier
     participant Triage as TriageEngine
-    participant RAG as RAG and Drafter
-    actor Tier2 as Tier-2 Human Queue
+    participant RAG as RAG Drafter
+    actor Agent as Tier-2 Human Agent
 
     Customer->>Pipeline: POST /api/process (tweet)
     Pipeline->>Classifier: predict(text)
-    Classifier-->>Pipeline: IntentResult(primary_intent, confidence)
+    Classifier-->>Pipeline: IntentResult(intent, confidence)
     Pipeline->>Triage: evaluate(tweet, intent)
 
-    alt Safety Hazard, Thermal Risk, PII, or Fraud Detected
-        Triage->>Tier2: Route immediately (ESCALATE with reason_code)
-        Triage-->>Pipeline: TriageDecision(action=ESCALATE, reason_code)
-    else Verified Routine Query (Confidence >= 0.60)
+    alt Safety Hazard, Thermal Risk, PII, or Fraud
+        Triage->>Agent: Route ticket (ESCALATE with reason code)
+        Triage-->>Pipeline: TriageDecision(ESCALATE)
+    else Routine Support Inquiry (High Confidence)
         Pipeline->>RAG: query_rag_and_draft(intent, text)
-        RAG-->>Pipeline: Grounded draft (max 280 chars) with apple.co URL
-        Pipeline->>Triage: Final clearance validation
-        Triage-->>Pipeline: TriageDecision(action=AUTO_HANDLE)
+        RAG-->>Pipeline: Grounded reply (max 280 chars)
+        Pipeline->>Triage: Verify draft safety
+        Triage-->>Pipeline: TriageDecision(AUTO_HANDLE)
     end
 
     Pipeline-->>Customer: SupportResponse JSON
 ```
-
-</details>
 
 ---
 
