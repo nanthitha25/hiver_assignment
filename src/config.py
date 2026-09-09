@@ -22,7 +22,7 @@ CHROMA_PERSIST_DIR.mkdir(parents=True, exist_ok=True)
 # Thresholds & Constraints
 MIN_INTENT_CONFIDENCE: float = float(os.getenv("MIN_INTENT_CONFIDENCE", "0.35"))
 MIN_RETRIEVAL_SIMILARITY: float = float(os.getenv("MIN_RETRIEVAL_SIMILARITY", "0.40"))
-FRUSTRATION_THRESHOLD: float = float(os.getenv("FRUSTRATION_THRESHOLD", "0.70"))
+FRUSTRATION_THRESHOLD: float = float(os.getenv("FRUSTRATION_THRESHOLD", "0.60"))
 MAX_TWEET_CHARS: int = 280
 
 # Embedding & LLM Configuration

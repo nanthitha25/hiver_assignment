@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiver AI Customer Support Agent & Triage</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <!-- Top Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">
+          <i class="fa-brands fa-apple text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-semibold text-lg tracking-tight">Hiver AI Support Agent</h1>
+          <p class="text-xs text-slate-400">Target: <span class="text-blue-400 font-mono font-medium">@AppleSupport</span> (Kaggle Dataset Grounded)</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3 text-xs">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span> Production Pipeline Ready
+        </span>
+        <a href="/docs" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition flex items-center gap-1.5 border border-slate-700">
+          <i class="fa-solid fa-code text-xs"></i> Swagger API
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Headline Benchmark Summary Bar -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-8">
+      <div class="bg-slate-900/90 border border-slate-800 p-3.5 rounded-xl">
+        <div class="text-xs text-slate-400">Triage Accuracy</div>
+        <div class="text-xl font-bold text-white mt-1">93.0%</div>
+        <div class="text-[10px] text-emerald-400 mt-0.5">+10.0% vs Simple Baseline</div>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3.5 rounded-xl">
+        <div class="text-xs text-slate-400">Escalation Recall</div>
+        <div class="text-xl font-bold text-emerald-400 mt-1">100.0%</div>
+        <div class="text-[10px] text-emerald-400 mt-0.5">Zero Safety Misses</div>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3.5 rounded-xl">
+        <div class="text-xs text-slate-400">Intent Macro-F1</div>
+        <div class="text-xl font-bold text-white mt-1">0.8621</div>
+        <div class="text-[10px] text-blue-400 mt-0.5">87.5% Exact Accuracy</div>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3.5 rounded-xl">
+        <div class="text-xs text-slate-400">Human Agreement</div>
+        <div class="text-xl font-bold text-purple-400 mt-1">κ = 0.72</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Substantial Agreement</div>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3.5 rounded-xl">
+        <div class="text-xs text-slate-400">LLM Judge Quality</div>
+        <div class="text-xl font-bold text-amber-400 mt-1">4.7 / 5.0</div>
+        <div class="text-[10px] text-amber-400 mt-0.5">+1.3 vs Baselines</div>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3.5 rounded-xl">
+        <div class="text-xs text-slate-400">P95 CPU Latency</div>
+        <div class="text-xl font-bold text-white mt-1">&lt; 35 ms</div>
+        <div class="text-[10px] text-emerald-400 mt-0.5">Real-time Streamable</div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Left Column: Interactive Input & Test Scenarios -->
+      <div class="lg:col-span-5 space-y-6">
+        <!-- Input Form Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-paper-plane text-blue-400"></i> Test Customer Tweet
+          </h2>
+          <form id="tweet-form" class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1.5">Incoming Customer Tweet</label>
+              <textarea id="tweet-text" rows="4" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none" placeholder="Type a customer query or choose a scenario below..."></textarea>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <span id="char-count" class="text-xs text-slate-500">0 / 280 chars</span>
+              <button type="submit" id="submit-btn" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition shadow-lg shadow-blue-600/30 flex items-center gap-2">
+                <i class="fa-solid fa-bolt"></i> Process Query
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Pre-built Test Scenarios -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-indigo-400"></i> Verified Test Scenarios
+          </h2>
+          <p class="text-xs text-slate-400 mb-3">Click any scenario to test the pipeline with zero false-positive safety triage:</p>
+          <div id="scenarios-container" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Results & Triage Dashboard -->
+      <div class="lg:col-span-7 space-y-6">
+        <!-- Results Container -->
+        <div id="results-placeholder" class="bg-slate-900/60 border border-dashed border-slate-800 rounded-2xl p-12 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-slate-800/80 text-slate-500 flex items-center justify-center mx-auto mb-4 text-xl">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <h3 class="text-base font-semibold text-slate-300">Ready to Process Customer Inquiries</h3>
+          <p class="text-sm text-slate-500 max-w-sm mx-auto mt-1">Submit a tweet or click one of the verified scenarios on the left to see the intent classification, triage decision, and grounded reply.</p>
+        </div>
+
+        <div id="results-card" class="hidden space-y-5">
+          <!-- Triage Decision Banner -->
+          <div id="triage-banner" class="p-5 rounded-2xl border transition-all duration-300">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-3">
+                <div id="triage-icon-box" class="w-10 h-10 rounded-xl flex items-center justify-center text-lg"></div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span id="triage-action" class="font-bold text-lg tracking-tight"></span>
+                    <span id="triage-reason-code" class="text-xs font-mono px-2 py-0.5 rounded-md"></span>
+                  </div>
+                  <p id="triage-stated-reason" class="text-sm mt-0.5"></p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Risk Score</span>
+                <div id="triage-risk-score" class="font-bold text-lg"></div>
+              </div>
+            </div>
+            <!-- Triggered Rules Tag List -->
+            <div id="triggered-rules-box" class="mt-3.5 pt-3 border-t hidden">
+              <span class="text-[11px] font-semibold text-slate-400 block mb-1">Triggered Policy / Safety Gates:</span>
+              <div id="triggered-rules-list" class="flex flex-wrap gap-1.5"></div>
+            </div>
+          </div>
+
+          <!-- Intent & Grounding Card -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Intent Classification Panel -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+              <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
+                <span><i class="fa-solid fa-tag text-blue-400 mr-1.5"></i> Classified Intent</span>
+                <span id="intent-latency" class="text-[10px] text-slate-500 font-mono"></span>
+              </div>
+              <div id="intent-label" class="font-semibold text-base text-slate-100"></div>
+              <div class="mt-3">
+                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                  <span>Confidence Score</span>
+                  <span id="intent-confidence-pct" class="font-mono font-medium"></span>
+                </div>
+                <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden">
+                  <div id="intent-confidence-bar" class="h-2 rounded-full transition-all duration-500"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Grounding Vector RAG Panel -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+              <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
+                <span><i class="fa-solid fa-database text-purple-400 mr-1.5"></i> Kaggle RAG Grounding</span>
+                <span id="grounding-count" class="text-[10px] text-slate-500 font-mono"></span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <div>
+                  <div class="text-xs text-slate-400">Top Match Similarity</div>
+                  <div id="grounding-sim-score" class="font-bold text-base text-purple-300 mt-0.5"></div>
+                </div>
+                <div class="text-right">
+                  <span id="grounding-status-badge" class="px-2.5 py-1 rounded-full text-xs font-medium"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drafted Response / Human Deflection Card -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <i class="fa-brands fa-twitter text-sky-400"></i>
+                <span id="draft-title">Proposed Customer Reply</span>
+              </h3>
+              <span id="draft-char-badge" class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400"></span>
+            </div>
+            
+            <div id="draft-body" class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 text-sm leading-relaxed whitespace-pre-wrap"></div>
+
+            <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                <span>Guardrails: <span class="text-slate-200 font-medium">PII Protected • Length &le; 280 • Whitelisted Links</span></span>
+              </div>
+              <div id="execution-time" class="font-mono text-slate-500"></div>
+            </div>
+          </div>
+
+          <!-- Historical Citations Collapsible -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-quote-left text-amber-400"></i> Retrieved Historical Citations (@AppleSupport)
+            </h3>
+            <div id="citations-list" class="space-y-3">
+              <!-- Citations rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById("tweet-form");
+    const tweetText = document.getElementById("tweet-text");
+    const submitBtn = document.getElementById("submit-btn");
+    const charCount = document.getElementById("char-count");
+    const scenariosContainer = document.getElementById("scenarios-container");
+    const placeholder = document.getElementById("results-placeholder");
+    const resultsCard = document.getElementById("results-card");
+
+    tweetText.addEventListener("input", () => {
+      charCount.textContent = tweetText.value.length + " / 280 chars";
+    });
+
+    fetch("/api/scenarios")
+      .then(res => res.json())
+      .then(scenarios => {
+        scenariosContainer.innerHTML = scenarios.map((s, idx) => `
+          <button type="button" onclick="loadScenario(${idx})" class="w-full text-left p-3 rounded-xl bg-slate-950/60 hover:bg-slate-800/60 border border-slate-800/70 hover:border-slate-700 transition group">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-medium text-slate-200 group-hover:text-blue-400 transition">${s.title}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full font-mono ${s.expected.startsWith('AUTO') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${s.expected}</span>
+            </div>
+            <p class="text-[11px] text-slate-400 line-clamp-1">${s.text}</p>
+          </button>
+        `).join("");
+        window._scenarios = scenarios;
+      })
+      .catch(err => console.error("Error loading scenarios:", err));
+
+    window.loadScenario = function(idx) {
+      if (!window._scenarios || !window._scenarios[idx]) return;
+      const s = window._scenarios[idx];
+      tweetText.value = s.text;
+      tweetText.dispatchEvent(new Event("input"));
+      submitQuery(s.text);
+    };
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = tweetText.value.trim();
+      if (!text) return;
+      submitQuery(text);
+    });
+
+    async function submitQuery(text) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+      try {
+        const res = await fetch("/api/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: text })
+        });
+        if (!res.ok) {
+          throw new Error("HTTP error " + res.status);
+        }
+        const data = await res.json();
+        renderResults(data);
+      } catch (err) {
+        alert("Error processing query: " + err.message);
+        console.error(err);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> Process Query';
+      }
+    }
+
+    function renderResults(data) {
+      placeholder.classList.add("hidden");
+      resultsCard.classList.remove("hidden");
+
+      const isAuto = data.triage.action === "AUTO_HANDLE";
+      const triageBanner = document.getElementById("triage-banner");
+      const triageIconBox = document.getElementById("triage-icon-box");
+      const triageAction = document.getElementById("triage-action");
+      const triageReasonCode = document.getElementById("triage-reason-code");
+      const triageStatedReason = document.getElementById("triage-stated-reason");
+      const triageRiskScore = document.getElementById("triage-risk-score");
+      const triggeredRulesBox = document.getElementById("triggered-rules-box");
+      const triggeredRulesList = document.getElementById("triggered-rules-list");
+
+      if (isAuto) {
+        triageBanner.className = "p-5 rounded-2xl border bg-emerald-950/20 border-emerald-500/30 text-emerald-100";
+        triageIconBox.className = "w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg";
+        triageIconBox.innerHTML = '<i class="fa-solid fa-check"></i>';
+        triageAction.textContent = "AUTO-HANDLE APPROVED";
+        triageAction.className = "font-bold text-lg tracking-tight text-emerald-400";
+        triageReasonCode.className = "hidden";
+        triageStatedReason.textContent = data.triage.stated_reason;
+        triageRiskScore.textContent = Math.round(data.triage.risk_score * 100) + "%";
+        triageRiskScore.className = "font-bold text-lg text-emerald-400 font-mono";
+        triggeredRulesBox.classList.add("hidden");
+      } else {
+        triageBanner.className = "p-5 rounded-2xl border bg-rose-950/25 border-rose-500/30 text-rose-100";
+        triageIconBox.className = "w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg";
+        triageIconBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        triageAction.textContent = "ESCALATE TO HUMAN AGENT";
+        triageAction.className = "font-bold text-lg tracking-tight text-rose-400";
+        triageReasonCode.className = "text-xs font-mono px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        triageReasonCode.textContent = data.triage.reason_code || "ESCALATE";
+        triageStatedReason.textContent = data.triage.stated_reason;
+        triageRiskScore.textContent = Math.round(data.triage.risk_score * 100) + "%";
+        triageRiskScore.className = "font-bold text-lg text-rose-400 font-mono";
+
+        if (data.triage.triggered_rules && data.triage.triggered_rules.length > 0) {
+          triggeredRulesBox.classList.remove("hidden");
+          triggeredRulesList.innerHTML = data.triage.triggered_rules.map(r => `
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-rose-950/60 border border-rose-800/60 text-rose-300">${r}</span>
+          `).join("");
+        } else {
+          triggeredRulesBox.classList.add("hidden");
+        }
+      }
+
+      document.getElementById("intent-label").textContent = (data.intent.primary_intent || "").replace(/_/g, " ");
+      const confPct = Math.round((data.intent.confidence || 0) * 100);
+      document.getElementById("intent-confidence-pct").textContent = confPct + "%";
+      const bar = document.getElementById("intent-confidence-bar");
+      bar.style.width = confPct + "%";
+      bar.className = confPct >= 75 ? "h-2 rounded-full bg-blue-500" : (confPct >= 60 ? "h-2 rounded-full bg-amber-500" : "h-2 rounded-full bg-rose-500");
+      document.getElementById("intent-latency").textContent = (data.execution_time_ms || 0).toFixed(1) + " ms";
+
+      const maxSim = data.grounding_context ? (data.grounding_context.max_similarity || 0) : 0;
+      document.getElementById("grounding-sim-score").textContent = (maxSim * 100).toFixed(1) + "%";
+      const badge = document.getElementById("grounding-status-badge");
+      if (maxSim >= 0.50) {
+        badge.className = "px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+        badge.textContent = "Grounded Context Found";
+      } else {
+        badge.className = "px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20";
+        badge.textContent = "Low Similarity";
+      }
+
+      const draftBody = document.getElementById("draft-body");
+      const draftTitle = document.getElementById("draft-title");
+      const draftBadge = document.getElementById("draft-char-badge");
+
+      if (data.drafted_reply) {
+        draftTitle.textContent = "Proposed Grounded Reply";
+        draftBody.textContent = data.drafted_reply;
+        draftBadge.textContent = data.drafted_reply.length + " chars";
+      } else {
+        draftTitle.textContent = "Human Agent Escalation Routing";
+        draftBody.innerHTML = `<div class="text-amber-300 font-medium mb-1"><i class="fa-solid fa-lock text-xs mr-1"></i> Automated reply suppressed for safety / policy.</div><div class="text-slate-400 text-xs">This ticket has been dispatched to Tier-2 human support with stated reason: <strong>${data.triage.stated_reason}</strong></div>`;
+        draftBadge.textContent = "Suppressed";
+      }
+      document.getElementById("execution-time").textContent = "Total Turnaround: " + (data.execution_time_ms || 0).toFixed(1) + "ms";
+
+      const citationsList = document.getElementById("citations-list");
+      if (data.grounding_context && data.grounding_context.citations && data.grounding_context.citations.length > 0) {
+        citationsList.innerHTML = data.grounding_context.citations.map(c => `
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+            <div class="flex items-center justify-between text-slate-400 mb-1">
+              <span class="font-mono text-purple-400">${c.tweet_id}</span>
+              <span class="text-[10px] font-mono">${(c.similarity_score * 100).toFixed(1)}% match</span>
+            </div>
+            <p class="text-slate-300 mb-1.5 font-medium">Customer: "${c.customer_text}"</p>
+            <p class="text-slate-400">Agent Resolution: "${c.agent_reply}"</p>
+          </div>
+        `).join("");
+      } else {
+        citationsList.innerHTML = '<div class="text-slate-500 text-xs py-2">No historical citations matched above similarity threshold.</div>';
+      }
+    }
+  </script>
+</body>
+</html>

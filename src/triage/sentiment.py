@@ -9,7 +9,8 @@ LEGAL_CHURN_KEYWORDS = [
     "lawyer", "attorney", "lawsuit", "sue", "suing", "police", "fraud",
     "scam", "scammers", "stolen money", "stole my money", "better business bureau",
     "bbb", "consumer protection", "switching to android", "switching to samsung",
-    "never buying apple again", "canceling everything",
+    "never buying apple again", "canceling everything", "hacked", "hack",
+    "compromised", "unauthorized", "cancel this now", "identity theft",
 ]
 
 # Anger and profanity markers

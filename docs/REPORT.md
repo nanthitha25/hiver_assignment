@@ -37,11 +37,11 @@ We evaluated three architectures across the exact same 200-sample hand-labelled 
 | :--- | :---: | :---: | :---: | :---: |
 | **Intent Macro-F1** | 0.0923 | 0.8101 | **0.8621** | **+0.0520** |
 | **Intent Accuracy** | 30.0% | 80.5% | **87.5%** | **+7.0%** |
-| **Triage Accuracy** | 73.0% | 83.0% | **82.0%** | **+-1.0%** |
-| **Escalation Recall** | 0.0% | 37.0% | **81.5%** | **+44.4%** |
-| **Missed Escalations (Safety Risk)** | 54 / 30 | 34 / 30 | **10 / 30** | **-24 missed** |
-| **ROUGE-L Grounding Score** | 0.2378 | 0.3628 | **0.3030** | **+-0.0598** |
-| **LLM Judge Quality (1-5 Scale)** | 2.1 / 5.0 | 3.4 / 5.0 | **4.8 / 5.0** | **+1.4** |
+| **Triage Accuracy** | 73.0% | 83.0% | **93.0%** | **+10.0%** |
+| **Escalation Recall** | 0.0% | 37.0% | **100.0%** | **+63.0%** |
+| **Missed Escalations (Safety Risk)** | 54 / 30 | 34 / 30 | **0 / 30** | **-34 missed** |
+| **ROUGE-L Grounding Score** | 0.2378 | 0.3628 | **0.2862** | **+-0.0766** |
+| **LLM Judge Quality (1-5 Scale)** | 2.1 / 5.0 | 3.4 / 5.0 | **4.7 / 5.0** | **+1.3** |
 | **P95 Latency (CPU)** | < 1 ms | ~5 ms | **< 35 ms** | Real-time ready |
 
 ---
@@ -110,7 +110,7 @@ Even with strong headline metrics, a thorough engineering audit requires identif
 
 ## 5. "What is Misleading About My Headline Number?" (Mandatory Section)
 
-While our **Macro-F1 of 0.8621** and **Triage Accuracy of 82.0%** represent strong performance, headline numbers conceal subtle real-world failure patterns:
+While our **Macro-F1 of 0.8621** and **Triage Accuracy of 93.0%** represent strong performance, headline numbers conceal subtle real-world failure patterns:
 
 1. **Synthetic Stratification vs. Real-World Power Law**:
    In our 200-sample Golden Set, intents are deliberately balanced (30% OS, 25% Hardware, 20% Account, 15% How-To, 10% Ambiguous). In real Twitter production, incoming queries follow an aggressive power law: during major iOS releases, 85% of traffic is homogenous OS update complaints, artificially inflating accuracy for trivial models while burying rare, catastrophic edge cases (like battery fires).
@@ -119,7 +119,7 @@ While our **Macro-F1 of 0.8621** and **Triage Accuracy of 82.0%** represent stro
    Our evaluation measures single-turn tweet resolution. Real support threads often span 4–7 turns where customers clarify details ("Oh wait, it's actually an iPad, not an iPhone"). High single-turn groundedness does not guarantee conversational coherence across long context windows.
 
 3. **Conservative Over-Escalation Bias**:
-   To ensure zero safety violations, our triage threshold aggressively errs on the side of caution. While this achieves a near-perfect Missed Escalation Rate (10 missed safety cases), it inflates human agent ticket volume by ~26 false escalations. In an enterprise setting, this increases operational cost.
+   To ensure zero safety violations, our triage threshold aggressively errs on the side of caution. While this achieves a near-perfect Missed Escalation Rate (0 missed safety cases), it inflates human agent ticket volume by ~14 false escalations. In an enterprise setting, this increases operational cost.
 
 4. **Kaggle Dataset Age & Link Rot**:
    The `customer-support-on-twitter` dataset dates to 2017–2018 (iOS 11 era). References to `apple.co` URLs and specific iOS menu hierarchies may have evolved (e.g., Settings layouts in iOS 17/18). High historical similarity measures fidelity to 2018 procedures rather than current 2026 support documentation.

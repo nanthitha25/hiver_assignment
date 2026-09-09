@@ -12,14 +12,17 @@ SSN_REGEX = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
 
 # Regex patterns for physical hardware and safety risks
 BATTERY_HAZARD_REGEX = re.compile(
-    r"\b(battery|phone|device|macbook|ipad)\s+(is\s+)?(swollen|swelling|bulg\w+|expanded|puffed|smoking|smokes?|spark\w*|fire|exploded?|burned?)\b|"
-    r"\b(swollen|bulging|expanding)\s+battery\b",
+    r"\b(battery|phone|device|macbook|ipad|iphone)\s+(is\s+)?(swollen|swelling|bulg\w+|expanded|puffed|smoking|smokes?|spark\w*|fire|exploded?|burned?|burning)\b|"
+    r"\b(swollen|bulging|expanding)\s+(battery|device|phone)\b|"
+    r"\b(smoke|smoking|fire|sparks?|sparking|exploded?|caught fire|burning)\b",
     re.IGNORECASE,
 )
 
 PHYSICAL_DAMAGE_REGEX = re.compile(
-    r"\b(shattered|smashed)\s+(glass|screen|display)\b|"
-    r"\b(dropped\s+(in|into)\s+(water|toilet|pool|ocean|bath)|liquid\s+damage|water\s+damage)\b",
+    r"\b(shattered|smashed|cracked)\s+(glass|screen|display)\b|"
+    r"\b(dropped|fell|submerged).*?\b(in|into|under)\s+(the\s+)?(water|toilet|pool|ocean|bath|lake|sink)\b|"
+    r"\b(liquid\s+damage|water\s+damage)\b|"
+    r"\b(truedepth(\s+camera)?|hardware\s+failure|hardware\s+issue)\b",
     re.IGNORECASE,
 )
 

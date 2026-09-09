@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 data/chroma_db/
+data/*.csv
+data/twcs.csv
+archive.zip
+*.zip
 .DS_Store
 *.egg-info/
 dist/

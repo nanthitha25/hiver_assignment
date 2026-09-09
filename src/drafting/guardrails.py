@@ -4,9 +4,9 @@ import re
 from typing import List, Tuple
 from src.config import MAX_TWEET_CHARS
 
-# Allowed official Apple domain prefixes
+# Allowed official Apple domain prefixes and Twitter official link wrapper (t.co)
 WHITELISTED_URL_PATTERN = re.compile(
-    r"^https?://(apple\.co|support\.apple\.com|iforgot\.apple\.com|reportaproblem\.apple\.com)/",
+    r"^https?://(apple\.co|support\.apple\.com|iforgot\.apple\.com|reportaproblem\.apple\.com|t\.co)/",
     re.IGNORECASE,
 )
 
