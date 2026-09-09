@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="100%" height="100%">
+  <defs>
+    <linearGradient id="sqBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <marker id="sqArr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="sqArrRed" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e" />
+    </marker>
+    <marker id="sqArrGrn" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399" />
+    </marker>
+  </defs>
+  <style>
+    .t { font-family: -apple-system, sans-serif; font-size: 16px; font-weight: 700; fill: #f8fafc; }
+    .st { font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 400; fill: #94a3b8; }
+    .part { font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #f1f5f9; text-anchor: middle; }
+    .msg { font-family: -apple-system, sans-serif; font-size: 11px; font-weight: 500; fill: #e2e8f0; }
+  </style>
+
+  <rect width="100%" height="100%" fill="url(#sqBg)" rx="16" stroke="#1e293b" />
+  <text x="40" y="40" class="t">Sequence Diagram: End-to-End Execution Flow</text>
+  <text x="40" y="60" class="st">Synchronous Processing, Deterministic Safety Interception, and Grounded Auto-Handling</text>
+
+  <!-- Lifelines -->
+  <!-- 1. Customer (x=80) -->
+  <rect x="25" y="85" width="110" height="30" rx="6" fill="#1e293b" stroke="#38bdf8" />
+  <text x="80" y="105" class="part">Customer</text>
+  <line x1="80" y1="115" x2="80" y2="520" stroke="#334155" stroke-dasharray="4" />
+
+  <!-- 2. Pipeline (x=240) -->
+  <rect x="185" y="85" width="110" height="30" rx="6" fill="#1e293b" stroke="#38bdf8" />
+  <text x="240" y="105" class="part">SupportPipeline</text>
+  <line x1="240" y1="115" x2="240" y2="520" stroke="#334155" stroke-dasharray="4" />
+
+  <!-- 3. Classifier (x=390) -->
+  <rect x="335" y="85" width="110" height="30" rx="6" fill="#1e293b" stroke="#c084fc" />
+  <text x="390" y="105" class="part">IntentClassifier</text>
+  <line x1="390" y1="115" x2="390" y2="520" stroke="#334155" stroke-dasharray="4" />
+
+  <!-- 4. Safety & Triage (x=550) -->
+  <rect x="495" y="85" width="110" height="30" rx="6" fill="#1e293b" stroke="#f59e0b" />
+  <text x="550" y="105" class="part">TriageEngine</text>
+  <line x1="550" y1="115" x2="550" y2="520" stroke="#334155" stroke-dasharray="4" />
+
+  <!-- 5. RAG & Drafter (x=710) -->
+  <rect x="655" y="85" width="110" height="30" rx="6" fill="#1e293b" stroke="#10b981" />
+  <text x="710" y="105" class="part">RAG &amp; Drafter</text>
+  <line x1="710" y1="115" x2="710" y2="520" stroke="#334155" stroke-dasharray="4" />
+
+  <!-- 6. Human Queue (x=870) -->
+  <rect x="815" y="85" width="110" height="30" rx="6" fill="#1e293b" stroke="#f43f5e" />
+  <text x="870" y="105" class="part">Tier-2 Queue</text>
+  <line x1="870" y1="115" x2="870" y2="520" stroke="#334155" stroke-dasharray="4" />
+
+  <!-- Messages -->
+  <!-- 1. Customer submits tweet -->
+  <line x1="80" y1="150" x2="236" y2="150" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#sqArr)" />
+  <text x="95" y="142" class="msg">1. POST /api/process (tweet)</text>
+
+  <!-- 2. Pipeline to IntentClassifier -->
+  <line x1="240" y1="180" x2="386" y2="180" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#sqArr)" />
+  <text x="250" y="172" class="msg">2. predict(text)</text>
+
+  <!-- 3. Classifier returns Intent -->
+  <line x1="390" y1="210" x2="244" y2="210" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#sqArr)" />
+  <text x="250" y="202" class="msg">3. IntentResult(primary_intent, conf)</text>
+
+  <!-- 4. Pipeline evaluates safety in TriageEngine -->
+  <line x1="240" y1="240" x2="546" y2="240" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#sqArr)" />
+  <text x="250" y="232" class="msg">4. evaluate(tweet, intent)</text>
+
+  <!-- ALT Block 1: Safety Hazard Escalation -->
+  <rect x="190" y="260" width="710" height="90" rx="8" fill="#450a0a" fill-opacity="0.3" stroke="#f43f5e" stroke-dasharray="4" />
+  <text x="200" y="278" font-family="-apple-system, sans-serif" font-size="10px" font-weight="700" fill="#f87171">[ALT: Safety Hazard, Thermal Risk, PII, Fraud]</text>
+  
+  <line x1="550" y1="300" x2="866" y2="300" stroke="#f43f5e" stroke-width="1.5" marker-end="url(#sqArrRed)" />
+  <text x="560" y="292" class="msg" fill="#fca5a5">5a. Route immediately: ESCALATE (Stated Reason Code)</text>
+
+  <line x1="550" y1="330" x2="244" y2="330" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#sqArrRed)" />
+  <text x="250" y="322" class="msg" fill="#fca5a5">5b. TriageDecision(action=ESCALATE, reason_code)</text>
+
+  <!-- ALT Block 2: Safe Auto-Handle Grounding -->
+  <rect x="190" y="365" width="710" height="115" rx="8" fill="#064e3b" fill-opacity="0.25" stroke="#10b981" stroke-dasharray="4" />
+  <text x="200" y="383" font-family="-apple-system, sans-serif" font-size="10px" font-weight="700" fill="#34d399">[ALT: Verified Routine Query]</text>
+
+  <line x1="240" y1="405" x2="706" y2="405" stroke="#10b981" stroke-width="1.5" marker-end="url(#sqArrGrn)" />
+  <text x="250" y="397" class="msg" fill="#a7f3d0">6a. query_rag_and_draft(intent, text)</text>
+
+  <line x1="710" y1="435" x2="244" y2="435" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#sqArrGrn)" />
+  <text x="250" y="427" class="msg" fill="#a7f3d0">6b. Grounded draft (&lt;= 280 chars) + Historical citations</text>
+
+  <line x1="240" y1="460" x2="546" y2="460" stroke="#10b981" stroke-width="1.5" marker-end="url(#sqArrGrn)" />
+  <text x="250" y="452" class="msg" fill="#a7f3d0">6c. Final clearance: AUTO_HANDLE APPROVED</text>
+
+  <!-- Return to Customer -->
+  <line x1="240" y1="505" x2="84" y2="505" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#sqArr)" />
+  <text x="95" y="497" class="msg">7. SupportResponse JSON</text>
+</svg>

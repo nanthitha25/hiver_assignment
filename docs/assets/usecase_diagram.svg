@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ucBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="pillGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <style>
+    .t { font-family: -apple-system, sans-serif; font-size: 16px; font-weight: 700; fill: #f8fafc; }
+    .st { font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 400; fill: #94a3b8; }
+    .actor-name { font-family: -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #38bdf8; text-anchor: middle; }
+    .uc-text { font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500; fill: #f1f5f9; text-anchor: middle; }
+  </style>
+
+  <rect width="100%" height="100%" fill="url(#ucBg)" rx="16" stroke="#1e293b" />
+  <text x="40" y="40" class="t">Use Case Diagram: Hiver AI Customer Support System</text>
+  <text x="40" y="60" class="st">Actors: Customer (Twitter), Tier-2 Human Agent, Evaluator / SDE</text>
+
+  <!-- System Boundary -->
+  <rect x="240" y="80" width="420" height="370" rx="16" fill="#0b1329" stroke="#334155" stroke-dasharray="4" />
+  <text x="260" y="105" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#64748b" letter-spacing="1px">HIVER AI SUPPORT AGENT SYSTEM</text>
+
+  <!-- Actor 1: Customer (Left) -->
+  <circle cx="100" cy="200" r="22" fill="#1e3a8a" stroke="#38bdf8" stroke-width="2" />
+  <text x="100" y="245" class="actor-name">Customer</text>
+  <text x="100" y="262" font-family="-apple-system, sans-serif" font-size="11px" fill="#94a3b8" text-anchor: middle;">(Twitter User)</text>
+
+  <!-- Actor 2: Tier-2 Agent (Right Top) -->
+  <circle cx="780" cy="180" r="22" fill="#831843" stroke="#f43f5e" stroke-width="2" />
+  <text x="780" y="225" class="actor-name" fill="#f43f5e">Tier-2 Agent</text>
+  <text x="780" y="242" font-family="-apple-system, sans-serif" font-size="11px" fill="#94a3b8" text-anchor: middle;">(Human Specialist)</text>
+
+  <!-- Actor 3: Evaluator (Right Bottom) -->
+  <circle cx="780" cy="340" r="22" fill="#581c87" stroke="#c084fc" stroke-width="2" width="100%" />
+  <text x="780" y="385" class="actor-name" fill="#c084fc">Evaluator / SDE</text>
+  <text x="780" y="402" font-family="-apple-system, sans-serif" font-size="11px" fill="#94a3b8" text-anchor: middle;">(Benchmark Auditor)</text>
+
+  <!-- Use Cases Inside System -->
+  <!-- UC1: Submit Tweet -->
+  <rect x="280" y="120" width="340" height="36" rx="18" fill="url(#pillGrad)" stroke="#38bdf8" />
+  <text x="450" y="143" class="uc-text">UC1: Submit Customer Tweet / Support Inquiry</text>
+
+  <!-- UC2: Classify Intent -->
+  <rect x="280" y="170" width="340" height="36" rx="18" fill="url(#pillGrad)" stroke="#64748b" />
+  <text x="450" y="193" class="uc-text">UC2: Classify Intent into 5 Data-Derived Classes</text>
+
+  <!-- UC3: Deterministic Safety & Triage -->
+  <rect x="280" y="220" width="340" height="36" rx="18" fill="url(#pillGrad)" stroke="#f59e0b" />
+  <text x="450" y="243" class="uc-text">UC3: Deterministic Triage Gate (Auto-Handle vs Escalate)</text>
+
+  <!-- UC4: Retrieve Historical & Draft -->
+  <rect x="280" y="270" width="340" height="36" rx="18" fill="url(#pillGrad)" stroke="#10b981" />
+  <text x="450" y="293" class="uc-text">UC4: Retrieve Historical Resolutions &amp; Draft Grounded Reply</text>
+
+  <!-- UC5: Review Escalation with Stated Reason -->
+  <rect x="280" y="320" width="340" height="36" rx="18" fill="url(#pillGrad)" stroke="#f43f5e" />
+  <text x="450" y="343" class="uc-text">UC5: Review Escalated Ticket with Explicit Stated Reason</text>
+
+  <!-- UC6: Run Benchmark Harness -->
+  <rect x="280" y="380" width="340" height="36" rx="18" fill="url(#pillGrad)" stroke="#c084fc" />
+  <text x="450" y="403" class="uc-text">UC6: Run 15-Minute Evaluation Harness &amp; LLM Judge</text>
+
+  <!-- Connectors -->
+  <line x1="125" y1="200" x2="280" y2="138" stroke="#38bdf8" stroke-width="1.5" />
+  <line x1="125" y1="200" x2="280" y2="188" stroke="#64748b" stroke-width="1.5" />
+  <line x1="125" y1="200" x2="280" y2="288" stroke="#10b981" stroke-width="1.5" />
+  
+  <line x1="620" y1="338" x2="755" y2="190" stroke="#f43f5e" stroke-width="1.5" />
+  <line x1="620" y1="398" x2="755" y2="350" stroke="#c084fc" stroke-width="1.5" />
+</svg>

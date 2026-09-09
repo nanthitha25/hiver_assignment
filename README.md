@@ -102,21 +102,158 @@ Evaluated across the exact same **200-sample hand-labelled Golden Set** (contain
 
 ---
 
-## 🏗️ 4. System Architecture & Data Flow
+## 🏗️ 4. Architecture, Use Case, Class & Sequence Diagrams
 
-![Hiver AI Support Architecture Diagram](docs/assets/architecture_diagram.png)
+This system is engineered and documented across four complementary structural and behavioural views:
+1. **System Architecture Diagram**: Component topology, data flow, and decoupled micro-engines.
+2. **Use Case Diagram**: System boundaries, primary actors (Customer, Human Agent, Auditor), and operational workflows.
+3. **Class Diagram**: Pydantic v2 strict schemas, domain entities, and orchestrator contracts.
+4. **Sequence Diagram**: Synchronous request lifecycle, safety interception, and grounded auto-reply dispatching.
+
+---
+
+### 4.1 System Architecture Diagram
+
+![System Architecture Diagram](docs/assets/architecture_diagram.png)
 
 ```mermaid
 flowchart TD
-    CT[Customer Tweet] --> Pre[Text Normalizer & PII Sanitizer]
-    Pre --> IC[Intent Classifier: all-MiniLM-L6-v2]
-    IC --> Safety{Deterministic Safety Gate}
-    Safety -->|Hazard or PII or Fraud| Triage[Triage Decision Engine]
-    Safety -->|Clean Query| RAG[ChromaDB Vector Store]
-    RAG --> Drafter[Grounded Reply Drafter]
+    CT["Customer Tweet (@AppleSupport)"] --> Pre["Text Normalizer and PII Sanitizer"]
+    Pre --> IC["Intent Classifier: all-MiniLM-L6-v2 Centroid"]
+    IC --> Safety{"Deterministic Safety Gate"}
+    Safety -->|"Hazard / PII / Fraud / Low Confidence"| Triage["Triage Decision Engine"]
+    Safety -->|"Clean Routine Query"| RAG["ChromaDB Vector Store (Historical Pairs)"]
+    RAG --> Drafter["Grounded Reply Drafter (Max 280 chars)"]
     Drafter --> Triage
-    Triage -->|action == ESCALATE| HumanQueue[Tier-2 Human Specialist Queue]
-    Triage -->|action == AUTO_HANDLE| AutoReply[Safe Auto-Reply Dispatcher]
+    Triage -->|"action == ESCALATE"| HumanQueue["Tier-2 Human Specialist Queue"]
+    Triage -->|"action == AUTO_HANDLE"| AutoReply["Safe Auto-Reply Dispatcher"]
+```
+
+---
+
+### 4.2 Use Case Diagram
+
+![Use Case Diagram](docs/assets/usecase_diagram.png)
+
+```mermaid
+flowchart LR
+    subgraph Primary_Actor["Primary Actor"]
+        Customer(("Customer<br/>(Twitter User)"))
+    end
+
+    subgraph System_Boundary["HIVER AI SUPPORT AGENT SYSTEM"]
+        UC1["UC1: Submit Customer Tweet / Support Inquiry"]
+        UC2["UC2: Classify Intent into 5 Data-Derived Classes"]
+        UC3["UC3: Deterministic Triage Gate (Auto-Handle vs Escalate)"]
+        UC4["UC4: Retrieve Historical Resolutions and Draft Reply"]
+        UC5["UC5: Review Escalated Ticket with Explicit Stated Reason"]
+        UC6["UC6: Run 15-Minute Evaluation Harness and LLM Judge"]
+    end
+
+    subgraph Secondary_Actors["Secondary Actors"]
+        HumanAgent(("Tier-2 Agent<br/>(Human Specialist)"))
+        Auditor(("Evaluator / SDE<br/>(Benchmark Auditor)"))
+    end
+
+    Customer --> UC1
+    Customer --> UC2
+    Customer --> UC4
+    UC5 --> HumanAgent
+    UC6 --> Auditor
+```
+
+---
+
+### 4.3 Class Diagram
+
+![Class Diagram](docs/assets/class_diagram.png)
+
+```mermaid
+classDiagram
+    class TweetInput {
+        +str tweet_id
+        +str text
+        +str author_id
+        +Optional~str~ created_at
+        +Optional~str~ in_reply_to_tweet_id
+    }
+
+    class IntentResult {
+        +AppleIntentEnum primary_intent
+        +float confidence
+        +List~IntentEnum~ secondary_intents
+        +Dict~str,float~ score_distribution
+    }
+
+    class TriageDecision {
+        +TriageAction action
+        +str stated_reason
+        +Optional~ReasonCode~ reason_code
+        +float risk_score
+        +List~str~ triggered_rules
+    }
+
+    class SupportPipeline {
+        -SemanticCentroidClassifier intent_classifier
+        -HistoricalRetriever retriever
+        -GroundedReplyGenerator reply_generator
+        -TriageEngine triage_engine
+        +process(tweet) SupportResponse
+        +batch_process(tweets) List~SupportResponse~
+        +fail_closed_fallback() SupportResponse
+    }
+
+    class SupportResponse {
+        +str tweet_id
+        +IntentResult intent
+        +TriageDecision triage
+        +Optional~str~ drafted_reply
+        +Optional~RetrievalResult~ grounding_context
+        +float execution_time_ms
+        +to_dict() dict
+        +to_json(indent) str
+    }
+
+    SupportPipeline ..> TweetInput : processes
+    SupportPipeline --> IntentResult : computes
+    SupportPipeline --> TriageDecision : evaluates
+    SupportPipeline --> SupportResponse : constructs
+    SupportResponse *-- IntentResult : aggregates
+    SupportResponse *-- TriageDecision : aggregates
+```
+
+---
+
+### 4.4 Sequence Diagram
+
+![Sequence Diagram](docs/assets/sequence_diagram.png)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Customer as Customer (Twitter)
+    participant Pipeline as SupportPipeline
+    participant Classifier as IntentClassifier
+    participant Triage as TriageEngine
+    participant RAG as RAG and Drafter
+    actor Tier2 as Tier-2 Human Queue
+
+    Customer->>Pipeline: POST /api/process (tweet)
+    Pipeline->>Classifier: predict(text)
+    Classifier-->>Pipeline: IntentResult(primary_intent, confidence)
+    Pipeline->>Triage: evaluate(tweet, intent)
+
+    alt Safety Hazard, Thermal Risk, PII, or Fraud Detected
+        Triage->>Tier2: Route immediately (ESCALATE with reason_code)
+        Triage-->>Pipeline: TriageDecision(action=ESCALATE, reason_code)
+    else Verified Routine Query (Confidence >= 0.60)
+        Pipeline->>RAG: query_rag_and_draft(intent, text)
+        RAG-->>Pipeline: Grounded draft (max 280 chars) with apple.co URL
+        Pipeline->>Triage: Final clearance validation
+        Triage-->>Pipeline: TriageDecision(action=AUTO_HANDLE)
+    end
+
+    Pipeline-->>Customer: SupportResponse JSON
 ```
 
 ---

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="100%" height="100%">
+  <defs>
+    <linearGradient id="clBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="clCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <style>
+    .t { font-family: -apple-system, sans-serif; font-size: 16px; font-weight: 700; fill: #f8fafc; }
+    .st { font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 400; fill: #94a3b8; }
+    .class-hdr { font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 700; fill: #38bdf8; }
+    .prop { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 11px; fill: #e2e8f0; }
+    .type { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 11px; fill: #94a3b8; }
+  </style>
+
+  <rect width="100%" height="100%" fill="url(#clBg)" rx="16" stroke="#1e293b" />
+  <text x="40" y="40" class="t">Class Diagram: Hiver AI Support Core Architecture</text>
+  <text x="40" y="60" class="st">Pydantic v2 Strict Data Contracts &amp; Pipeline Orchestration Components</text>
+
+  <!-- Class 1: TweetInput -->
+  <g transform="translate(40, 90)">
+    <rect width="260" height="150" rx="10" fill="url(#clCard)" stroke="#38bdf8" stroke-width="1.2" />
+    <path d="M 0 30 L 260 30" stroke="#334155" />
+    <text x="15" y="21" class="class-hdr">TweetInput (BaseModel)</text>
+    <text x="15" y="52" class="prop">+ tweet_id: <tspan class="type">str</tspan></text>
+    <text x="15" y="72" class="prop">+ text: <tspan class="type">str (min_len=1)</tspan></text>
+    <text x="15" y="92" class="prop">+ author_id: <tspan class="type">str</tspan></text>
+    <text x="15" y="112" class="prop">+ created_at: <tspan class="type">Optional[str]</tspan></text>
+    <text x="15" y="132" class="prop">+ in_reply_to_tweet_id: <tspan class="type">Opt[str]</tspan></text>
+  </g>
+
+  <!-- Class 2: IntentResult -->
+  <g transform="translate(340, 90)">
+    <rect width="280" height="150" rx="10" fill="url(#clCard)" stroke="#c084fc" stroke-width="1.2" />
+    <path d="M 0 30 L 280 30" stroke="#334155" />
+    <text x="15" y="21" class="class-hdr" fill="#c084fc">IntentResult (BaseModel)</text>
+    <text x="15" y="52" class="prop">+ primary_intent: <tspan class="type">AppleIntentEnum</tspan></text>
+    <text x="15" y="72" class="prop">+ confidence: <tspan class="type">float [0.0, 1.0]</tspan></text>
+    <text x="15" y="92" class="prop">+ secondary_intents: <tspan class="type">List[IntentEnum]</tspan></text>
+    <text x="15" y="112" class="prop">+ score_distribution: <tspan class="type">Dict[str, float]</tspan></text>
+  </g>
+
+  <!-- Class 3: TriageDecision -->
+  <g transform="translate(660, 90)">
+    <rect width="260" height="150" rx="10" fill="url(#clCard)" stroke="#f59e0b" stroke-width="1.2" />
+    <path d="M 0 30 L 260 30" stroke="#334155" />
+    <text x="15" y="21" class="class-hdr" fill="#f59e0b">TriageDecision (BaseModel)</text>
+    <text x="15" y="52" class="prop">+ action: <tspan class="type">TriageAction</tspan></text>
+    <text x="15" y="72" class="prop">+ stated_reason: <tspan class="type">str</tspan></text>
+    <text x="15" y="92" class="prop">+ reason_code: <tspan class="type">Optional[ReasonCode]</tspan></text>
+    <text x="15" y="112" class="prop">+ risk_score: <tspan class="type">float [0.0, 1.0]</tspan></text>
+    <text x="15" y="132" class="prop">+ triggered_rules: <tspan class="type">List[str]</tspan></text>
+  </g>
+
+  <!-- Class 4: SupportPipeline -->
+  <g transform="translate(40, 270)">
+    <rect width="360" height="210" rx="10" fill="url(#clCard)" stroke="#10b981" stroke-width="1.2" />
+    <path d="M 0 30 L 360 30" stroke="#334155" />
+    <text x="15" y="21" class="class-hdr" fill="#10b981">SupportPipeline (Orchestrator)</text>
+    <text x="15" y="52" class="prop">- intent_classifier: <tspan class="type">SemanticCentroidClassifier</tspan></text>
+    <text x="15" y="72" class="prop">- retriever: <tspan class="type">HistoricalRetriever</tspan></text>
+    <text x="15" y="92" class="prop">- reply_generator: <tspan class="type">GroundedReplyGenerator</tspan></text>
+    <text x="15" y="112" class="prop">- triage_engine: <tspan class="type">TriageEngine</tspan></text>
+    <path d="M 0 126 L 360 126" stroke="#334155" />
+    <text x="15" y="148" class="prop">+ process(tweet: TweetInput) -&gt; <tspan class="type">SupportResponse</tspan></text>
+    <text x="15" y="170" class="prop">+ batch_process(tweets) -&gt; <tspan class="type">List[SupportResponse]</tspan></text>
+    <text x="15" y="192" class="prop">+ fail_closed_fallback() -&gt; <tspan class="type">SupportResponse</tspan></text>
+  </g>
+
+  <!-- Class 5: SupportResponse -->
+  <g transform="translate(450, 270)">
+    <rect width="470" height="210" rx="10" fill="url(#clCard)" stroke="#38bdf8" stroke-width="1.2" />
+    <path d="M 0 30 L 470 30" stroke="#334155" />
+    <text x="15" y="21" class="class-hdr">SupportResponse (Aggregate Root Schema)</text>
+    <text x="15" y="52" class="prop">+ tweet_id: <tspan class="type">str</tspan></text>
+    <text x="15" y="72" class="prop">+ intent: <tspan class="type">IntentResult</tspan></text>
+    <text x="15" y="92" class="prop">+ triage: <tspan class="type">TriageDecision</tspan></text>
+    <text x="15" y="112" class="prop">+ drafted_reply: <tspan class="type">Optional[str] (<= 280 chars)</tspan></text>
+    <text x="15" y="132" class="prop">+ grounding_context: <tspan class="type">Optional[RetrievalResult]</tspan></text>
+    <text x="15" y="152" class="prop">+ execution_time_ms: <tspan class="type">float</tspan></text>
+    <path d="M 0 166 L 470 166" stroke="#334155" />
+    <text x="15" y="188" class="prop">+ to_dict() -&gt; <tspan class="type">dict</tspan>    + to_json(indent: int) -&gt; <tspan class="type">str</tspan></text>
+  </g>
+</svg>
