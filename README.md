@@ -36,7 +36,11 @@ To make an autonomous agent trustworthy enough to deploy in production, our arch
 2. **Grounded Reply Drafting (RAG)**: Retrieves historical resolution pairs from `@AppleSupport` and drafts replies strictly grounded in verified brand history (under 280 characters, official `apple.co` URLs only).
 3. **Deterministic Safety Triage & Escalation Gate**: Guarantees **zero false-positive auto-handles** on physical hazards, thermal risks, liquid immersion, fraud, PII, and customer aggression.
 
-![Hiver AI Support Pipeline Workflow](docs/assets/pipeline_workflow.png)
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/pipeline_workflow.png" target="_blank">
+    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/pipeline_workflow.png" alt="Hiver AI Support Pipeline Workflow" width="100%" />
+  </a>
+</p>
 
 ---
 
@@ -114,7 +118,14 @@ This system is engineered and documented across four complementary structural an
 
 ### 4.1 System Architecture Diagram
 
-![System Architecture Diagram](docs/assets/architecture_diagram.png)
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/architecture_diagram.png" target="_blank">
+    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/architecture_diagram.png" alt="System Architecture Diagram" width="100%" />
+  </a>
+</p>
+
+<details>
+<summary><b>📐 View Mermaid Diagram Specification</b></summary>
 
 ```mermaid
 flowchart TD
@@ -129,11 +140,20 @@ flowchart TD
     Triage -->|"action == AUTO_HANDLE"| AutoReply["Safe Auto-Reply Dispatcher"]
 ```
 
+</details>
+
 ---
 
 ### 4.2 Use Case Diagram
 
-![Use Case Diagram](docs/assets/usecase_diagram.png)
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/usecase_diagram.png" target="_blank">
+    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/usecase_diagram.png" alt="Use Case Diagram" width="100%" />
+  </a>
+</p>
+
+<details>
+<summary><b>📐 View Mermaid Diagram Specification</b></summary>
 
 ```mermaid
 flowchart LR
@@ -162,11 +182,20 @@ flowchart LR
     UC6 --> Auditor
 ```
 
+</details>
+
 ---
 
 ### 4.3 Class Diagram
 
-![Class Diagram](docs/assets/class_diagram.png)
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/class_diagram.png" target="_blank">
+    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/class_diagram.png" alt="Class Diagram" width="100%" />
+  </a>
+</p>
+
+<details>
+<summary><b>📐 View Mermaid Diagram Specification</b></summary>
 
 ```mermaid
 classDiagram
@@ -222,11 +251,20 @@ classDiagram
     SupportResponse *-- TriageDecision : aggregates
 ```
 
+</details>
+
 ---
 
 ### 4.4 Sequence Diagram
 
-![Sequence Diagram](docs/assets/sequence_diagram.png)
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/sequence_diagram.png" target="_blank">
+    <img src="https://cdn.jsdelivr.net/gh/nanthitha25/hiver_assignment@main/docs/assets/sequence_diagram.png" alt="Sequence Diagram" width="100%" />
+  </a>
+</p>
+
+<details>
+<summary><b>📐 View Mermaid Diagram Specification</b></summary>
 
 ```mermaid
 sequenceDiagram
@@ -255,6 +293,8 @@ sequenceDiagram
 
     Pipeline-->>Customer: SupportResponse JSON
 ```
+
+</details>
 
 ---
 
