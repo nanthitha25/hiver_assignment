@@ -38,11 +38,11 @@ To make an autonomous agent trustworthy enough to deploy in production, our arch
 
 ```mermaid
 flowchart LR
-    A[Customer Tweet] --> B[Intent Classifier]
-    B --> C{Safety Gate}
-    C -->|Hazard or PII or Fraud| D[Tier-2 Human Escalation]
-    C -->|Safe Routine Query| E[RAG Historical Grounding]
-    E --> F[Grounded Auto-Reply]
+    A["Customer Tweet"] --> B["Intent Classifier"]
+    B --> C{"Safety Gate"}
+    C -->|"Hazard or PII or Fraud"| D["Human Specialist Escalation"]
+    C -->|"Routine Query"| E["RAG Historical Grounding"]
+    E --> F["Grounded Auto-Reply"]
 ```
 
 ---
@@ -115,15 +115,15 @@ Evaluated across the exact same **200-sample hand-labelled Golden Set** (contain
 
 ```mermaid
 flowchart TD
-    A[Customer Tweet] --> B[Text Normalizer and PII Sanitizer]
-    B --> C[Intent Classifier: all-MiniLM-L6-v2]
-    C --> D{Deterministic Safety Gate}
-    D -->|Hazard / PII / Fraud| E[Triage Decision Engine]
-    D -->|Routine Query| F[ChromaDB Vector Store]
-    F --> G[Grounded Reply Drafter]
+    A["Customer Tweet"] --> B["Text Normalizer and PII Sanitizer"]
+    B --> C["Intent Classifier"]
+    C --> D{"Safety Gate"}
+    D -->|"Hazard or PII or Fraud"| E["Triage Engine"]
+    D -->|"Routine Support"| F["ChromaDB Vector Store"]
+    F --> G["Grounded Reply Drafter"]
     G --> E
-    E -->|Action: ESCALATE| H[Tier-2 Human Agent Queue]
-    E -->|Action: AUTO_HANDLE| I[Safe Auto-Reply Dispatcher]
+    E -->|"Escalate"| H["Tier-2 Human Specialist"]
+    E -->|"Auto-Handle"| I["Auto-Reply Dispatcher"]
 ```
 
 ---
@@ -132,17 +132,17 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    Customer((Customer))
-    Agent((Tier-2 Agent))
-    Auditor((SDE Auditor))
+    Customer["Customer"]
+    Agent["Tier-2 Agent"]
+    Auditor["Evaluator"]
 
-    subgraph System["Hiver AI Support Agent System"]
-        UC1[UC1: Submit Customer Tweet]
-        UC2[UC2: Classify Support Intent]
-        UC3[UC3: Deterministic Safety and Triage]
-        UC4[UC4: Retrieve Historical Grounding and Draft Reply]
-        UC5[UC5: Review Escalated Ticket with Reason Code]
-        UC6[UC6: Run Evaluation Harness and LLM Judge]
+    subgraph System["Hiver AI Support System"]
+        UC1["UC1: Submit Customer Inquiry"]
+        UC2["UC2: Classify Support Intent"]
+        UC3["UC3: Deterministic Triage Gate"]
+        UC4["UC4: Retrieve Historical Solutions"]
+        UC5["UC5: Review Escalated Tickets"]
+        UC6["UC6: Run Evaluation Harness"]
     end
 
     Customer --> UC1
@@ -168,8 +168,8 @@ classDiagram
     class IntentResult {
         +string primary_intent
         +float confidence
-        +list secondary_intents
-        +dict score_distribution
+        +string secondary_intents
+        +string score_distribution
     }
 
     class TriageDecision {
@@ -188,12 +188,10 @@ classDiagram
     }
 
     class SupportPipeline {
-        -classifier
-        -retriever
-        -drafter
-        -triage_engine
+        -string classifier_model
+        -string vector_store
+        -string triage_engine
         +process(tweet) SupportResponse
-        +batch_process(tweets) list
     }
 
     SupportPipeline ..> TweetInput : processes
@@ -209,29 +207,29 @@ classDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Customer as Customer (Twitter)
+    actor Customer
     participant Pipeline as SupportPipeline
     participant Classifier as IntentClassifier
     participant Triage as TriageEngine
-    participant RAG as RAG Drafter
-    actor Agent as Tier-2 Human Agent
+    participant RAG as GroundedDrafter
+    actor Agent as HumanAgent
 
-    Customer->>Pipeline: POST /api/process (tweet)
-    Pipeline->>Classifier: predict(text)
-    Classifier-->>Pipeline: IntentResult(intent, confidence)
-    Pipeline->>Triage: evaluate(tweet, intent)
+    Customer->>Pipeline: Submit Customer Tweet
+    Pipeline->>Classifier: Predict Intent
+    Classifier-->>Pipeline: Return Intent and Confidence
+    Pipeline->>Triage: Evaluate Safety and Intent
 
-    alt Safety Hazard, Thermal Risk, PII, or Fraud
-        Triage->>Agent: Route ticket (ESCALATE with reason code)
-        Triage-->>Pipeline: TriageDecision(ESCALATE)
-    else Routine Support Inquiry (High Confidence)
-        Pipeline->>RAG: query_rag_and_draft(intent, text)
-        RAG-->>Pipeline: Grounded reply (max 280 chars)
-        Pipeline->>Triage: Verify draft safety
-        Triage-->>Pipeline: TriageDecision(AUTO_HANDLE)
+    alt Hazard or Sensitive PII or Fraud Detected
+        Triage->>Agent: Route Ticket to Escalation Queue
+        Triage-->>Pipeline: Return Escalate Decision
+    else Safe Routine Support Query
+        Pipeline->>RAG: Retrieve Historical Resolution
+        RAG-->>Pipeline: Return Grounded Draft Reply
+        Pipeline->>Triage: Validate Draft Safety
+        Triage-->>Pipeline: Return Auto-Handle Decision
     end
 
-    Pipeline-->>Customer: SupportResponse JSON
+    Pipeline-->>Customer: Return Support Response JSON
 ```
 
 ---
