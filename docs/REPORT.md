@@ -149,3 +149,18 @@ While our **Macro-F1 of 0.8621** and **Triage Accuracy of 93.0%** represent stro
 10. **Separate Trivial and Simple Baselines**: Built both a naive majority-class baseline and a statistical TF-IDF + Logistic Regression baseline to prove meaningful incremental lift at each abstraction layer.
 11. **Empirical Human Agreement Validation (Cohen's Kappa)**: Hand-graded 50 responses to validate the LLM judge's rubric calibration, ensuring our evaluation harness is scientifically defensible.
 12. **Subsampling over Full 3M Tweet Ingestion**: Following assignment guidance, subsampled targeted `@AppleSupport` conversational pairs using DuckDB streaming instead of loading the entire 3M Kaggle dataset into memory.
+
+---
+
+## 8. Citations & Borrowed Tooling
+
+In accordance with the assignment ground rules (*"Cite anything you borrowed. Borrowing is fine; not knowing what you borrowed is not"*), here is the complete accounting of all borrowed foundations, libraries, and reference datasets:
+
+1. **Dataset**: Kaggle Customer Support on Twitter (`thoughtvector/customer-support-on-twitter`, CC BY-NC-SA 4.0). Used specifically for isolating inbound customer tweets and verified outbound agent responses for `@AppleSupport`.
+2. **Embedding & Semantic Representation**: `sentence-transformers/all-MiniLM-L6-v2` (Apache 2.0) by Nils Reimers & Iryna Gurevych (2019, *Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks*). Used for fast CPU-bound semantic centroid representations (384-dimensional dense vectors, ~15ms inference).
+3. **Vector Database**: `chromadb` (Apache 2.0). Embedded in-process vector store configured with local SQLite persistence and cosine distance indexing.
+4. **Streaming Data Ingestion**: `duckdb` (MIT License). Used for zero-copy streaming SQL extraction of conversation-initiating tweets directly from multi-gigabyte CSVs without memory exhaustion.
+5. **Statistical Calibration & Baselines**: `scikit-learn` (BSD-3-Clause). Utilized `TfidfVectorizer` and `LogisticRegression` for Baseline 2, and `cohen_kappa_score` for Deliverable 3 human agreement calibration.
+6. **Data Validation & Typing**: `pydantic` v2 (MIT License). Enforces strict runtime data models (`TweetInput`, `IntentResult`, `TriageDecision`, `SupportResponse`) preventing silent type coercion or schema drift.
+7. **API Serving & CLI**: `fastapi` / `uvicorn` (MIT License) for asynchronous REST endpoints; `typer` / `rich` (MIT License) for interactive command-line debugging.
+8. **Inter-Annotator Agreement Rubric**: Landis, J. R., & Koch, G. G. (1977). *The measurement of observer agreement for categorical data*. Biometrics, 159-174. Used for interpreting Cohen's Kappa thresholds ($\kappa \ge 0.61$ = Substantial Agreement).

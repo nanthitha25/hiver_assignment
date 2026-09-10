@@ -406,8 +406,9 @@ hiver_assignment/
 │       └── ingest_kaggle.py            # DuckDB streaming Kaggle customer support extractor
 │
 ├── data/                               # Evaluation & Historical Corpora
+│   ├── README.md                       # Deliverable 2: Sampling & Labelling Methodology Guide
 │   ├── golden_eval_set.jsonl           # Deliverable 2: 200 hand-labelled test queries
-│   ├── human_annotations_sample.jsonl  # 50 human-annotated pairs for judge calibration
+│   ├── human_annotations_sample.jsonl  # Deliverable 3: 50 human-annotated pairs for judge calibration
 │   └── apple_support_kaggle_pairs.jsonl# Extracted Kaggle customer support pairs
 │
 ├── docs/                               # Assignment Documentation & Audit Artifacts
@@ -438,10 +439,11 @@ hiver_assignment/
 | Assignment Deliverable | Repository Artifact | Notes & Compliance |
 | :--- | :--- | :--- |
 | **Deliverable 1: Runnable Pipeline** | [`README.md`](README.md), [`src/pipeline.py`](src/pipeline.py), [`run.sh`](run.sh) | Reproduces all headline results in ~20 seconds (< 15 min requirement). |
-| **Deliverable 2: Golden Evaluation Set** | [`data/golden_eval_set.jsonl`](data/golden_eval_set.jsonl) | Exactly 200 hand-labelled examples with 20% verified safety/adversarial edge cases. |
-| **Deliverable 3: Evaluation Harness & Judge** | [`src/eval/runner.py`](src/eval/runner.py), [`src/eval/judge.py`](src/eval/judge.py) | Automated metrics + LLM-as-a-judge rubric calibrated with $\kappa = 0.7200$ human agreement. |
+| **Deliverable 2: Golden Evaluation Set** | [`data/golden_eval_set.jsonl`](data/golden_eval_set.jsonl), [`data/README.md`](data/README.md) | Exactly 200 hand-labelled examples with 20% verified safety/adversarial edge cases and full sampling/labelling methodology note. |
+| **Deliverable 3: Evaluation Harness & Judge** | [`src/eval/runner.py`](src/eval/runner.py), [`src/eval/judge.py`](src/eval/judge.py), [`data/human_annotations_sample.jsonl`](data/human_annotations_sample.jsonl) | Automated metrics + LLM-as-a-judge rubric calibrated with $\kappa = 0.7200$ human agreement. |
 | **Deliverable 4: Technical Report** | [`docs/REPORT.md`](docs/REPORT.md) | Full report covering Problem Framing, Results vs 2 Baselines, Top 5 Failures, *"What is Misleading About My Headline Number?"*, and Next Steps. |
 | **Deliverable 5: Architectural Decision Log** | Section 7 in [`docs/REPORT.md`](docs/REPORT.md) | Plain list of 12 non-obvious engineering decisions and trade-off rationales. |
+| **Ground Rule: Tooling Citations** | Section 10 in [`README.md`](README.md), Section 8 in [`docs/REPORT.md`](docs/REPORT.md) | Full accounting and citations of all borrowed datasets, embeddings, models, and libraries. |
 
 ---
 
@@ -491,3 +493,34 @@ tests/test_triage.py::test_triage_safe_auto_handle_clearance PASSED
 
 ============================= 33 passed in 48.38s ==============================
 ```
+
+---
+
+## 📚 10. Citations & Borrowed Tooling
+
+In accordance with the assignment instructions (*"Cite anything you borrowed. Borrowing is fine; not knowing what you borrowed is not"*), here is the comprehensive attribution of all external models, frameworks, and datasets used across this system:
+
+1. **Kaggle Customer Support Dataset**:
+   - **Source**: `thoughtvector/customer-support-on-twitter` (Kaggle, CC BY-NC-SA 4.0).
+   - **Usage**: Used for isolating authentic inbound customer queries and outbound `@AppleSupport` agent resolutions to form our historical vector index and evaluation datasets.
+2. **Sentence Transformers (`all-MiniLM-L6-v2`)**:
+   - **Citation**: Reimers, N., & Gurevych, I. (2019). *Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks*. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing (EMNLP).
+   - **Usage**: Dense 384-dimensional semantic embeddings for zero-shot centroid intent classification and vector search retrieval, running entirely on CPU in $< 35\text{ms}$.
+3. **ChromaDB**:
+   - **Citation**: Chroma Core Team. (2023). *Chroma: The open-source embedding database* (Apache 2.0).
+   - **Usage**: In-process local SQLite vector index storing `@AppleSupport` historical resolution pairs for intent-filtered retrieval-augmented drafting.
+4. **DuckDB**:
+   - **Citation**: Raasveldt, M., & Mühleisen, H. (2019). *DuckDB: an Embeddable Analytical Database*. In Proceedings of the 2019 International Conference on Management of Data (SIGMOD).
+   - **Usage**: High-throughput out-of-core SQL streaming engine in `src/data/ingest_kaggle.py` for isolating conversation initiators without loading the entire 3-million-tweet CSV into memory.
+5. **Scikit-Learn**:
+   - **Citation**: Pedregosa, F. et al. (2011). *Scikit-learn: Machine Learning in Python*. Journal of Machine Learning Research, 12, 2825-2830.
+   - **Usage**: TF-IDF vectorizer and Logistic Regression for the statistical baseline (Baseline 2), and `cohen_kappa_score` for inter-rater agreement calibration.
+6. **Pydantic v2**:
+   - **Citation**: Colvin, S. et al. (2023). *Pydantic: Data validation using Python type hints*.
+   - **Usage**: Runtime strict validation schemas ensuring fail-closed safety and type integrity across API boundaries.
+7. **FastAPI & Uvicorn**:
+   - **Citation**: Ramírez, S. et al. (2018). *FastAPI: High performance, easy to learn, fast to code, ready for production*.
+   - **Usage**: Async ASGI web server powering the interactive dashboard and REST verification endpoints.
+8. **Inter-Annotator Agreement Rubric**:
+   - **Citation**: Landis, J. R., & Koch, G. G. (1977). *The measurement of observer agreement for categorical data*. Biometrics, 33(1), 159-174.
+   - **Usage**: Benchmark scale for interpreting Cohen's Kappa ($\kappa = 0.7200$, establishing Substantial Agreement).
