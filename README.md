@@ -36,14 +36,7 @@ To make an autonomous agent trustworthy enough to deploy in production, our arch
 2. **Grounded Reply Drafting (RAG)**: Retrieves historical resolution pairs from `@AppleSupport` and drafts replies strictly grounded in verified brand history (under 280 characters, official `apple.co` URLs only).
 3. **Deterministic Safety Triage & Escalation Gate**: Guarantees **zero false-positive auto-handles** on physical hazards, thermal risks, liquid immersion, fraud, PII, and customer aggression.
 
-```mermaid
-flowchart LR
-    A["Customer Tweet"] --> B["Intent Classifier"]
-    B --> C{"Safety Gate"}
-    C -->|"Hazard or PII or Fraud"| D["Human Specialist Escalation"]
-    C -->|"Routine Query"| E["RAG Historical Grounding"]
-    E --> F["Grounded Auto-Reply"]
-```
+![Hiver AI Support Pipeline Workflow](./docs/assets/pipeline_workflow.png)
 
 ---
 
@@ -113,7 +106,12 @@ Evaluated across the exact same **200-sample hand-labelled Golden Set** (contain
 
 ### 4.1 System Architecture Diagram
 
-```mermaid
+![System Architecture Diagram](./docs/assets/architecture_diagram.png)
+
+<details>
+<summary>📝 View Mermaid Code</summary>
+
+```text
 flowchart TD
     A["Customer Tweet"] --> B["Text Normalizer and PII Sanitizer"]
     B --> C["Intent Classifier"]
@@ -126,11 +124,18 @@ flowchart TD
     E -->|"Auto-Handle"| I["Auto-Reply Dispatcher"]
 ```
 
+</details>
+
 ---
 
 ### 4.2 Use Case Diagram
 
-```mermaid
+![Use Case Diagram](./docs/assets/usecase_diagram.png)
+
+<details>
+<summary>📝 View Mermaid Code</summary>
+
+```text
 flowchart LR
     Customer["Customer"]
     Agent["Tier-2 Agent"]
@@ -152,11 +157,18 @@ flowchart LR
     UC6 --> Auditor
 ```
 
+</details>
+
 ---
 
 ### 4.3 Class Diagram
 
-```mermaid
+![Class Diagram](./docs/assets/class_diagram.png)
+
+<details>
+<summary>📝 View Mermaid Code</summary>
+
+```text
 classDiagram
     class TweetInput {
         +string tweet_id
@@ -200,11 +212,18 @@ classDiagram
     SupportResponse *-- TriageDecision : contains
 ```
 
+</details>
+
 ---
 
 ### 4.4 Sequence Diagram
 
-```mermaid
+![Sequence Diagram](./docs/assets/sequence_diagram.png)
+
+<details>
+<summary>📝 View Mermaid Code</summary>
+
+```text
 sequenceDiagram
     autonumber
     actor Customer
@@ -231,6 +250,8 @@ sequenceDiagram
 
     Pipeline-->>Customer: Return Support Response JSON
 ```
+
+</details>
 
 ---
 
